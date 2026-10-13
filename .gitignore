@@ -1,0 +1,32 @@
+# ── Installed packages (anyone can re-create them with `npm install`) ──
+node_modules/
+.pnp
+.pnp.js
+
+# ── Environment files (may hold API URLs or keys) ──
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+!.env.example
+
+# ── Production build output (created by `npm run build`) ──
+build/
+dist/
+
+# ── Test output ──
+coverage/
+
+# ── Logs ──
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Editor and system files ──
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
