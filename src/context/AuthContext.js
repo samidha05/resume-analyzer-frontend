@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
-const API_URL  = process.env.REACT_APP_API_URL || 'http://localhost:5000' || 'https://5553.netlify.app';
+const API_URL  = process.env.REACT_APP_API_URL || 'http://localhost:5000' || 'https://resume-analyzer-backend-h9k2.onrender.com';
 const API_BASE = `${API_URL}/api`;
 
 const AuthContext = createContext();
