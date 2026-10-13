@@ -1,21 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { GoogleLogin } from '@react-oauth/google';
 import {
   Mail, Lock, AlertCircle, Sparkles, ArrowRight,
   Eye, EyeOff, Zap, Shield, Star, ChevronDown, User
 } from 'lucide-react';
-
-/* ── Google "G" SVG icon ── */
-const GoogleIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
-    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-  </svg>
-);
 
 /* ── Email suggestion dropdown ── */
 function EmailSuggestions({ value, suggestions, onSelect, visible }) {
@@ -51,13 +40,11 @@ const Login = () => {
   const [showPw,   setShowPw]   = useState(false);
   const [error,    setError]    = useState('');
   const [loading,  setLoading]  = useState(false);
-  const [gLoading, setGLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const { login, googleLogin, getKnownEmails } = useAuth();
+  const { login, getKnownEmails } = useAuth();
   const navigate         = useNavigate();
   const emailRef         = useRef(null);
-  const googleBtnRef     = useRef(null);
   const knownEmails      = getKnownEmails();
 
   /* close suggestions when clicking outside */
@@ -85,9 +72,6 @@ const Login = () => {
       setLoading(false);
     }
   };
-
-  /* ── Google login ── */
-  /* handled inline by GoogleLogin component below */
 
   return (
     <div className="min-h-screen flex">
@@ -167,63 +151,14 @@ const Login = () => {
               </div>
             )}
 
-            {/* ── Google Sign-In — custom styled button ── */}
-            <div className="mb-5">
-              <button
-                type="button"
-                onClick={() => {
-                  // trigger the hidden GoogleLogin
-                  googleBtnRef.current?.querySelector('div[role="button"]')?.click()
-                    || googleBtnRef.current?.querySelector('button')?.click();
-                }}
-                disabled={gLoading}
-                className="w-full flex items-center justify-center space-x-3 py-3.5 px-6 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-2xl font-bold text-gray-700 dark:text-gray-200 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed group"
-              >
-                {gLoading ? (
-                  <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
-                ) : (
-                  <GoogleIcon />
-                )}
-                <span className="text-sm">{gLoading ? 'Signing in with Google…' : 'Continue with Google'}</span>
-                {!gLoading && (
-                  <span className="ml-auto text-xs text-gray-400 dark:text-gray-500 group-hover:text-blue-500 transition-colors">→</span>
-                )}
-              </button>
-
-              {/* Hidden real GoogleLogin — triggered by the button above */}
-              <div className="hidden" ref={googleBtnRef}>
-                <GoogleLogin
-                  onSuccess={async (credentialResponse) => {
-                    setGLoading(true);
-                    setError('');
-                    try {
-                      await googleLogin(credentialResponse.credential);
-                      navigate('/');
-                    } catch (err) {
-                      setError(err.response?.data?.message || 'Google sign-in failed. Please try again.');
-                    } finally {
-                      setGLoading(false);
-                    }
-                  }}
-                  onError={() => setError('Google sign-in failed. Please try again.')}
-                  useOneTap={false}
-                  theme="outline"
-                  size="large"
-                  width="368"
-                  text="signin_with_google"
-                  shape="rectangular"
-                />
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="flex items-center gap-3 mb-5">
-              <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-              <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                or sign in with email
-              </span>
-              <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-            </div>
+                    {/* Divider */}
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+                      <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                        sign in with email
+                      </span>
+                      <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+                    </div>
 
             {/* ── Email / Password form ── */}
             <form onSubmit={handleSubmit} className="space-y-5">
